@@ -135,7 +135,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            <Canvas shadows camera={{ position: [0, 2, listMode ? 6 : 5], fov: 45 }} className={listMode ? "pointer-events-none" : ""}>
+            <Canvas shadows camera={{ position: [5, 2, listMode ? 6 : 5], fov: 45 }} className={listMode ? "pointer-events-none" : ""}>
                 <ambientLight intensity={0.7} />
                 <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
                 <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
@@ -159,6 +159,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 {!listMode && (
                     <OrbitControls
+                        target={[0, 1, 0]}
                         enablePan={false}
                         enableZoom={true}
                         minZoom={0.5}
@@ -171,6 +172,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 )}
                 {listMode && (
                     <OrbitControls
+                        target={[0, 0.5, 0]}
                         enablePan={false}
                         enableZoom={false}
                         minPolarAngle={Math.PI / 2.5}
