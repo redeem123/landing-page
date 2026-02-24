@@ -54,9 +54,9 @@ export default function ProductDetailPage({
                         <span className="text-primary tracking-[0.3em]">{product.name}</span>
                     </nav>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">
-                        {/* Product Image Gallery */}
-                        <div className="flex flex-col gap-4">
+                    <div className="flex flex-col max-w-6xl mx-auto gap-12 lg:gap-20">
+                        {/* 3D Model Gallery - Top Center */}
+                        <div className="w-full flex flex-col items-center justify-center relative min-h-[50vh] md:min-h-[70vh]">
                             {/* 3D Model Viewer */}
                             <ProductViewer3D modelUrl={activeModel === 'BOX' && product.boxModelUrl ? product.boxModelUrl : product.modelUrl} />
 
@@ -79,9 +79,9 @@ export default function ProductDetailPage({
                             )}
                         </div>
 
-                        {/* Product Info */}
-                        <div className="flex flex-col justify-center max-w-lg">
-                            <h1 className="font-serif text-4xl md:text-6xl font-normal tracking-tight text-primary mb-4 text-balance">
+                        {/* Product Info - Bottom Center */}
+                        <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto px-4 w-full">
+                            <h1 className="font-serif text-5xl md:text-7xl font-normal tracking-tight text-primary mb-4 text-balance">
                                 {product.name}
                             </h1>
                             <p className="text-sm text-primary/50 font-sans tracking-[0.3em] uppercase mb-8 font-bold">bởi {product.brand}</p>
@@ -116,10 +116,12 @@ export default function ProductDetailPage({
                                 </div>
                             </div>
 
+                            <div className="w-full h-px bg-primary/10 my-10" />
+
                             {/* Size Selector */}
-                            <div className="mb-10">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/60 block mb-4">Dung Tích</span>
-                                <div className="flex gap-4">
+                            <div className="mb-10 w-full flex flex-col items-center">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/60 block mb-6">Dung Tích</span>
+                                <div className="flex justify-center gap-4">
                                     {product.sizes.map((size) => (
                                         <button
                                             key={size}
@@ -137,7 +139,7 @@ export default function ProductDetailPage({
 
                             <Button
                                 size="lg"
-                                className="w-full h-16 mb-10 flex items-center justify-center gap-3 bg-primary text-secondary hover:bg-accent hover:text-primary transition-colors duration-500 font-bold tracking-[0.2em] uppercase text-xs rounded-none"
+                                className="w-full max-w-md h-16 mb-12 flex items-center justify-center gap-3 bg-primary text-secondary hover:bg-accent hover:text-primary transition-colors duration-500 font-bold tracking-[0.2em] uppercase text-xs rounded-none"
                                 onClick={() => {
                                     addItem({
                                         id: `${product.id}-${selectedSize}`,
@@ -153,13 +155,13 @@ export default function ProductDetailPage({
                                 Thêm Vào Giỏ
                             </Button>
 
-                            <div className="grid grid-cols-2 gap-4 text-[9px] tracking-[0.2em] font-bold text-primary/50 uppercase border-t border-primary/10 pt-8">
-                                <div className="flex items-center gap-2">
-                                    <Truck className="h-4 w-4 text-accent" />
+                            <div className="grid grid-cols-2 gap-8 text-[9px] tracking-[0.2em] font-bold text-primary/50 uppercase border-t border-primary/10 pt-10 w-full mb-12">
+                                <div className="flex flex-col items-center gap-3">
+                                    <Truck className="h-5 w-5 text-accent" />
                                     Giao Hàng Hỏa Tốc
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <ShieldCheck className="h-4 w-4 text-accent" />
+                                <div className="flex flex-col items-center gap-3">
+                                    <ShieldCheck className="h-5 w-5 text-accent" />
                                     Bảo Đảm Chính Hãng
                                 </div>
                             </div>

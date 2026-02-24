@@ -146,7 +146,7 @@ function ModelLoader({ url }: { url: string }) {
 
 export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: string, listMode?: boolean }) {
     return (
-        <div className={`h-full w-full ${listMode ? '' : 'min-h-[600px] border border-primary/5'} bg-[#f0eee9] rounded-sm relative overflow-hidden flex items-center justify-center`}>
+        <div className={`h-full w-full ${listMode ? 'bg-[#f0eee9] min-h-[400px]' : 'bg-transparent absolute inset-0'} rounded-sm relative overflow-hidden flex items-center justify-center`}>
             {/* Overlay badge - hide in list mode */}
             {!listMode && (
                 <div className="absolute top-6 left-6 z-10 bg-white/60 backdrop-blur-md text-[9px] uppercase tracking-[0.3em] px-4 py-2 font-bold text-primary border border-primary/5 rounded-none flex items-center gap-3 shadow-sm">
