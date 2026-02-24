@@ -134,9 +134,9 @@ function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: numb
             const scaledCenter = scaledBox.getCenter(new THREE.Vector3())
             const scaledSize = scaledBox.getSize(new THREE.Vector3())
 
-            // Move it so its 3D center is at the scene origin, but aligned slightly above the floor shadow
+            // Move it so its 3D center is at the scene origin, but aligned exactly with floor
             clonedScene.position.x -= scaledCenter.x
-            clonedScene.position.y -= scaledCenter.y + 0.3
+            clonedScene.position.y -= scaledCenter.y - (scaledSize.y / 2) // Move center down exactly half its height so the bottom touches 0
             clonedScene.position.z -= scaledCenter.z
         }
     }, [clonedScene])
@@ -146,7 +146,7 @@ function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: numb
 
 export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: string, listMode?: boolean }) {
     return (
-        <div className={`h-full w-full ${listMode ? 'bg-[#f0eee9] min-h-[400px]' : 'bg-transparent absolute inset-0'} rounded-sm relative overflow-hidden flex items-center justify-center`}>
+        <div className={`w-full ${listMode ? 'bg-[#f0eee9] min-h-[400px]' : 'bg-transparent min-h-[60vh] md:min-h-[80vh]'} rounded-sm relative overflow-hidden flex items-center justify-center`}>
             {/* Overlay badge - hide in list mode */}
             {!listMode && (
                 <div className="absolute top-6 left-6 z-10 bg-white/60 backdrop-blur-md text-[9px] uppercase tracking-[0.3em] px-4 py-2 font-bold text-primary border border-primary/5 rounded-none flex items-center gap-3 shadow-sm">
@@ -158,7 +158,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            <Canvas shadows camera={{ position: [listMode ? 4 : 10, listMode ? 2 : 5, listMode ? 5 : 12], fov: listMode ? 45 : 35 }} className={listMode ? "pointer-events-none" : ""}>
+            <Canvas shadows camera={{ position: [listMode ? 4 : 15, listMode ? 2 : 4, listMode ? 5 : 15], fov: listMode ? 45 : 35 }} className={listMode ? "pointer-events-none" : ""}>
                 <ambientLight intensity={0.7} />
                 <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
                 <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
@@ -166,7 +166,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 <Suspense fallback={null}>
                     {modelUrl ? (
-                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 20.0} />
+                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 45.0} />
                     ) : (
                         <ProceduralAventusBottle />
                     )}
@@ -180,7 +180,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 {!listMode && (
                     <OrbitControls
-                        target={[0, 3, 0]}
+                        target={[0, 0, 0]}
                         enablePan={false}
                         enableZoom={true}
                         minZoom={0.5}
