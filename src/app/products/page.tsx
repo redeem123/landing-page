@@ -4,10 +4,7 @@ import { Footer } from "@/components/layout/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
-// In a real app, this would be fetched from Prisma based on searchParams
-const mockProducts = [
-    { id: "1", name: "Aventus", brand: "Creed", price: 495, category: "MEN", scent: "FRUITY" }
-]
+import { products } from "@/lib/products"
 
 export default async function ProductsPage({
     searchParams,
@@ -17,10 +14,10 @@ export default async function ProductsPage({
     const p = await searchParams;
     const categoryFilter = p.category as string | undefined
 
-    // Mock filtering
+    // Product filtering
     const filteredProducts = categoryFilter
-        ? mockProducts.filter(prod => prod.category === categoryFilter)
-        : mockProducts
+        ? products.filter(prod => prod.category === categoryFilter)
+        : products
 
     return (
         <div className="flex min-h-screen flex-col bg-background">
@@ -87,7 +84,7 @@ export default async function ProductsPage({
                                             <h3 className="font-serif text-lg font-medium text-primary mb-1 group-hover:text-accent transition-colors">
                                                 {product.name}
                                             </h3>
-                                            <p className="text-sm text-primary/50 font-light mb-2">{product.scent} • Eau de Parfum</p>
+                                            <p className="text-sm text-primary/50 font-light mb-2">{product.scentFamily} • Eau de Parfum</p>
                                             <p className="text-primary font-medium">${product.price.toFixed(2)}</p>
                                         </CardContent>
                                     </Card>

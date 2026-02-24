@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useRef } from "react"
 import { ProductViewer3D } from "@/components/ui/product-viewer-3d"
+import { products } from "@/lib/products"
 
 export default function Home() {
   const targetRef = useRef<HTMLDivElement>(null)
@@ -107,39 +108,37 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 gap-y-20 gap-x-12 sm:grid-cols-2 lg:grid-cols-4">
-              {[1].map((i) => (
-                <Link href={i === 1 ? "/products/1" : `/products/mock-id-${i}`} key={i}>
+              {products.map((product) => (
+                <Link href={`/products/${product.id}`} key={product.id}>
                   <Card className="group cursor-pointer border-none shadow-none bg-transparent flex flex-col">
                     {/* Image Container with 3D Model */}
                     <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#f0eee9] mb-6">
-                      {/* V2 Product Image Placeholder styling */}
                       <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100 z-20 pointer-events-none" />
 
-                      {/* Interactive 3D Model specifically for the Aventus card */}
-                      {i === 1 ? (
-                        <div className="w-full h-full transition-transform duration-[1.5s] ease-out group-hover:scale-[1.03]">
-                          <ProductViewer3D modelUrl="/models/aventus.glb" listMode={true} />
-                        </div>
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center transition-transform duration-[1.5s] ease-out group-hover:scale-[1.03]">
-                          {/* Fallback for other mock products */}
-                          <div className="h-[60%] w-[45%] rounded-t-full rounded-b-sm border border-primary/10 shadow-xl bg-gradient-to-b from-white to-[#fcfcfc] flex flex-col items-center justify-center relative">
-                            <div className="absolute top-[-10px] h-[15px] w-[30px] bg-gradient-to-r from-accent to-accent-light border border-accent/80 rounded-t-sm" />
-                            <span className="font-serif text-[8px] uppercase tracking-widest text-primary/40 mb-1 scale-y-125">Maison</span>
-                            <div className="h-px w-6 bg-accent/40 my-1" />
-                            <span className="font-serif text-[7px] font-bold uppercase tracking-widest text-primary/50">N°{i}</span>
+                      {/* Interactive 3D Model */}
+                      <div className="w-full h-full transition-transform duration-[1.5s] ease-out group-hover:scale-[1.03]">
+                        {product.modelUrl ? (
+                          <ProductViewer3D modelUrl={product.modelUrl} listMode={true} />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center">
+                            <div className="h-[60%] w-[45%] rounded-t-full rounded-b-sm border border-primary/10 shadow-xl bg-gradient-to-b from-white to-[#fcfcfc] flex flex-col items-center justify-center relative">
+                              <div className="absolute top-[-10px] h-[15px] w-[30px] bg-gradient-to-r from-accent to-accent-light border border-accent/80 rounded-t-sm" />
+                              <span className="font-serif text-[8px] uppercase tracking-widest text-primary/40 mb-1 scale-y-125">{product.brand}</span>
+                              <div className="h-px w-6 bg-accent/40 my-1" />
+                              <span className="font-serif text-[7px] font-bold uppercase tracking-widest text-primary/50">{product.name}</span>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
 
                     {/* Typography block */}
                     <CardContent className="p-0 text-center flex-1 flex flex-col">
                       <h3 className="font-serif text-xl font-normal text-primary mb-2 group-hover:text-accent transition-colors duration-500">
-                        {i === 1 ? "Aventus" : `Bespoke N°${i}`}
+                        {product.name}
                       </h3>
                       <p className="text-[11px] uppercase tracking-[0.2em] text-primary/50 font-bold mb-4">Eau de Parfum</p>
-                      <p className="text-sm text-primary font-medium tracking-wide mt-auto">${i === 1 ? 495 : 245 + (i * 10)}.00</p>
+                      <p className="text-sm text-primary font-medium tracking-wide mt-auto">${product.price.toFixed(2)}</p>
                     </CardContent>
                   </Card>
                 </Link>

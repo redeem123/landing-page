@@ -9,6 +9,8 @@ import { useCart } from "@/store/useCart"
 import { useState, use } from "react"
 import { ProductViewer3D } from "@/components/ui/product-viewer-3d"
 
+import { products } from "@/lib/products"
+
 export default function ProductDetailPage({
     params,
 }: {
@@ -20,23 +22,17 @@ export default function ProductDetailPage({
     const [selectedSize, setSelectedSize] = useState<number>(50)
     const [activeModel, setActiveModel] = useState<'BOTTLE' | 'BOX'>('BOTTLE')
 
-    // Mock data
-    const product = {
-        id: productId,
-        name: productId === '1' ? "Aventus" : `Bespoke N°${productId}`,
-        brand: productId === '1' ? "Creed" : "Maison",
-        description: productId === '1'
-            ? "The exceptional Aventus was inspired by the dramatic life of a historic emperor, celebrating strength, power and success. Introduced in 2010 and crafted by the deft hand of Master Perfumer Olivier Creed, this scent has grown to become the best-selling fragrance in the history of the brand."
-            : "A timeless expression of Parisian sophistication. Opening with bright citrus notes, revealing a heart of rare Grasse rose, and settling into a warm, sensual base of Madagascar vanilla and sandalwood. Perfect for evening wear.",
-        price: productId === '1' ? 495 : 245 + parseInt(productId) * 10,
-        sizes: [30, 50, 100],
-        category: productId === '1' ? "MEN" : "WOMEN",
-        scentFamily: productId === '1' ? "FRUITY" : "FLORAL",
-        topNotes: productId === '1' ? "Pineapple, Bergamot, Blackcurrant Leaves, Apple" : "Bergamot, Pear, Pink Pepper",
-        middleNotes: productId === '1' ? "Birch, Pink Berries, Patchouli, Jasmine" : "Grasse Rose, Jasmine Sambac, Ylang-Ylang",
-        baseNotes: productId === '1' ? "Musk, Oakmoss, Ambergris, Vanilla" : "Madagascar Vanilla, Sandalwood, White Musk",
-        modelUrl: productId === '1' ? "/models/aventus.glb" : undefined,
-        boxModelUrl: productId === '1' ? "/models/aventusBox.glb" : undefined,
+    const product = products.find(p => p.id === productId)
+
+    if (!product) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-4xl font-serif mb-4">Sản phẩm không tồn tại</h1>
+                    <Link href="/products" className="text-accent hover:underline">Quay lại danh sách</Link>
+                </div>
+            </div>
+        )
     }
 
     return (
