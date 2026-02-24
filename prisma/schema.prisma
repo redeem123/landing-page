@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("CUSTOMER") // Role: CUSTOMER, ADMIN
+  addresses     Address[]
+  orders        Order[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id             String      @id @default(cuid())
+  name           String
+  brand          String
+  description    String
+  price          Float
+  sizes          String      // JSON string of sizes in ml: "[30, 50, 100]"
+  stock          Int         @default(0)
+  category       String      // WOMEN, MEN, UNISEX, GIFT_SET, NICHE
+  scentFamily    String      // FLORAL, WOODY, ORIENTAL, FRESH, CITRUS, FRUITY
+  topNotes       String      // Comma separated or JSON string
+  middleNotes    String      
+  baseNotes      String      
+  images         String      // JSON string of image URLs: '["url1", "url2"]'
+  rating         Float       @default(0)
+  numReviews     Int         @default(0)
+  isFeatured     Boolean     @default(false)
+  orderItems     OrderItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id])
+  status         String      @default("PENDING") // PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
+  totalAmount    Float
+  paymentIntent  String?
+  items          OrderItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float   // Price at time of purchase
+  size      Int     // Size selected
+}
