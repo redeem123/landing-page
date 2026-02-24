@@ -146,7 +146,7 @@ function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: numb
 
 export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: string, listMode?: boolean }) {
     return (
-        <div className={`w-full ${listMode ? 'bg-[#f0eee9] min-h-[400px]' : 'bg-transparent min-h-[60vh] md:min-h-[80vh]'} rounded-sm relative overflow-hidden flex items-center justify-center`}>
+        <div className={`w-full ${listMode ? 'bg-[#f0eee9] min-h-[400px]' : 'bg-transparent h-full'} rounded-sm relative overflow-hidden flex items-center justify-center`}>
             {/* Overlay badge - hide in list mode */}
             {!listMode && (
                 <div className="absolute top-6 left-6 z-10 bg-white/60 backdrop-blur-md text-[9px] uppercase tracking-[0.3em] px-4 py-2 font-bold text-primary border border-primary/5 rounded-none flex items-center gap-3 shadow-sm">
@@ -158,7 +158,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            <Canvas shadows camera={{ position: [listMode ? 4 : 15, listMode ? 2 : 6, listMode ? 5 : 15], fov: listMode ? 45 : 35 }} className={listMode ? "pointer-events-none" : ""}>
+            <Canvas shadows camera={{ position: [listMode ? 4 : 15, listMode ? 2 : 20, listMode ? 5 : 15], fov: listMode ? 45 : 40 }} className={listMode ? "pointer-events-none" : ""}>
                 <ambientLight intensity={0.7} />
                 <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
                 <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
@@ -166,7 +166,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 <Suspense fallback={null}>
                     {modelUrl ? (
-                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 35.0} />
+                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 22.0} />
                     ) : (
                         <ProceduralAventusBottle />
                     )}

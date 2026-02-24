@@ -56,7 +56,7 @@ export default function ProductDetailPage({
 
                     <div className="flex flex-col max-w-6xl mx-auto gap-12 lg:gap-20">
                         {/* 3D Model Gallery - Top Center */}
-                        <div className="w-full flex flex-col items-center justify-center relative min-h-[50vh] md:min-h-[70vh]">
+                        <div className="w-full h-[70vh] relative">
                             {/* 3D Model Viewer */}
                             <ProductViewer3D modelUrl={activeModel === 'BOX' && product.boxModelUrl ? product.boxModelUrl : product.modelUrl} />
 
