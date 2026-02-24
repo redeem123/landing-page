@@ -110,15 +110,38 @@ function ProceduralAventusBottle() {
     )
 }
 
-// Loader for the actual external 3D model
+// Loader for the actual external 3D model with instant correct scaling
 function ModelLoader({ url }: { url: string }) {
     const { scene } = useGLTF(url)
+    const clonedScene = React.useMemo(() => scene.clone(), [scene])
 
-    return (
-        <group position={[0, -1.0, 0]}>
-            <primitive object={scene} />
-        </group>
-    )
+    React.useLayoutEffect(() => {
+        // First compute bounding box of the unscaled original
+        clonedScene.updateMatrixWorld(true)
+        const box = new THREE.Box3().setFromObject(clonedScene)
+        const size = box.getSize(new THREE.Vector3())
+        const center = box.getCenter(new THREE.Vector3())
+
+        const maxDim = Math.max(size.x, size.y, size.z)
+        if (maxDim > 0) {
+            // Instantly scale uniformly to roughly fit ~3 units
+            const scale = 3.0 / maxDim
+            clonedScene.scale.setScalar(scale)
+
+            // Recompute box after scaling to accurately center it
+            clonedScene.updateMatrixWorld(true)
+            const scaledBox = new THREE.Box3().setFromObject(clonedScene)
+            const scaledCenter = scaledBox.getCenter(new THREE.Vector3())
+            const scaledSize = scaledBox.getSize(new THREE.Vector3())
+
+            // Move it so its 3D center is at the scene origin, but aligned slightly above the floor shadow
+            clonedScene.position.x -= scaledCenter.x
+            clonedScene.position.y -= scaledCenter.y + 0.3
+            clonedScene.position.z -= scaledCenter.z
+        }
+    }, [clonedScene])
+
+    return <primitive object={clonedScene} />
 }
 
 export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: string, listMode?: boolean }) {
@@ -143,9 +166,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 <Suspense fallback={null}>
                     {modelUrl ? (
-                        <Bounds fit clip margin={1.2}>
-                            <ModelLoader url={modelUrl} />
-                        </Bounds>
+                        <ModelLoader url={modelUrl} />
                     ) : (
                         <ProceduralAventusBottle />
                     )}
