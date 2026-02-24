@@ -111,7 +111,7 @@ function ProceduralAventusBottle() {
 }
 
 // Loader for the actual external 3D model with instant correct scaling
-function ModelLoader({ url }: { url: string }) {
+function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: number }) {
     const { scene } = useGLTF(url)
     const clonedScene = React.useMemo(() => scene.clone(), [scene])
 
@@ -124,8 +124,8 @@ function ModelLoader({ url }: { url: string }) {
 
         const maxDim = Math.max(size.x, size.y, size.z)
         if (maxDim > 0) {
-            // Instantly scale uniformly to roughly fit ~3 units
-            const scale = 3.0 / maxDim
+            // Instantly scale uniformly to roughly fit the target size
+            const scale = targetSize / maxDim
             clonedScene.scale.setScalar(scale)
 
             // Recompute box after scaling to accurately center it
@@ -158,7 +158,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            <Canvas shadows camera={{ position: [5, 2, listMode ? 6 : 5], fov: 45 }} className={listMode ? "pointer-events-none" : ""}>
+            <Canvas shadows camera={{ position: [listMode ? 4 : 2.5, listMode ? 2 : 1.2, listMode ? 5 : 3], fov: 45 }} className={listMode ? "pointer-events-none" : ""}>
                 <ambientLight intensity={0.7} />
                 <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
                 <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
@@ -166,7 +166,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 <Suspense fallback={null}>
                     {modelUrl ? (
-                        <ModelLoader url={modelUrl} />
+                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 4.8} />
                     ) : (
                         <ProceduralAventusBottle />
                     )}
