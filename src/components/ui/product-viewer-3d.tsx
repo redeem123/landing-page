@@ -158,7 +158,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            <Canvas shadows camera={{ position: [listMode ? 4 : 2.5, listMode ? 2 : 1.2, listMode ? 5 : 3], fov: 45 }} className={listMode ? "pointer-events-none" : ""}>
+            <Canvas shadows camera={{ position: [listMode ? 4 : 10, listMode ? 2 : 5, listMode ? 5 : 12], fov: listMode ? 45 : 35 }} className={listMode ? "pointer-events-none" : ""}>
                 <ambientLight intensity={0.7} />
                 <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
                 <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
@@ -166,7 +166,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 <Suspense fallback={null}>
                     {modelUrl ? (
-                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 4.8} />
+                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 20.0} />
                     ) : (
                         <ProceduralAventusBottle />
                     )}
@@ -180,7 +180,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 {!listMode && (
                     <OrbitControls
-                        target={[0, 1, 0]}
+                        target={[0, 3, 0]}
                         enablePan={false}
                         enableZoom={true}
                         minZoom={0.5}
