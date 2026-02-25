@@ -89,6 +89,20 @@ export const products: Product[] = [
         baseNotes: "Amber, Sandalwood, Cedar",
         modelUrl: "/models/Hugo/hugo_woman_bottle.glb",
         boxModelUrl: "/models/Hugo/hugo_woman_box.glb",
+    },
+    {
+        id: "6",
+        name: "Addict",
+        brand: "Dior",
+        description: "Dior Addict is a floral-oriental fragrance with a passionate and intuitive personality. The head note features the Silk Tree Flower, Mandarin Leaf and Orange Blossom. The heart note is the Queen of the Night, a rare flower that blooms only for a few hours. The base note is Bourbon Vanilla.",
+        price: 130,
+        sizes: [30, 50, 100],
+        category: "WOMEN",
+        scentFamily: "ORIENTAL FLORAL",
+        topNotes: "Silk Tree Flower, Mandarin Leaf, Orange Blossom",
+        middleNotes: "Queen of the Night Flower, Rose, Jasmine",
+        baseNotes: "Bourbon Vanilla, Sandalwood, Tonka Bean",
+        modelUrl: "/models/DiorAdict/diorAdict.glb",
     }
 ];
 
