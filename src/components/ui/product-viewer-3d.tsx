@@ -132,14 +132,13 @@ function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: numb
             clonedScene.updateMatrixWorld(true)
             const scaledBox = new THREE.Box3().setFromObject(clonedScene)
             const scaledCenter = scaledBox.getCenter(new THREE.Vector3())
-            const scaledSize = scaledBox.getSize(new THREE.Vector3())
 
-            // Move it so its 3D center is at the scene origin, but aligned exactly with floor
+            // Move it so its 3D center is exactly at [0, 0, 0]
             clonedScene.position.x -= scaledCenter.x
-            clonedScene.position.y -= (scaledCenter.y - (scaledSize.y / 2)) + 1.2 // Move center down to -1.2 level
+            clonedScene.position.y -= scaledCenter.y
             clonedScene.position.z -= scaledCenter.z
         }
-    }, [clonedScene])
+    }, [clonedScene, targetSize])
 
     return <primitive object={clonedScene} />
 }
@@ -158,7 +157,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            <Canvas shadows camera={{ position: [listMode ? 4 : 15, listMode ? 2 : 20, listMode ? 5 : 15], fov: listMode ? 45 : 40 }} className={listMode ? "pointer-events-none" : ""}>
+            <Canvas shadows camera={{ position: [listMode ? 4 : 12, listMode ? 2 : 5, listMode ? 5 : 12], fov: listMode ? 45 : 40 }} className={listMode ? "pointer-events-none" : ""}>
                 <ambientLight intensity={0.7} />
                 <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
                 <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
@@ -166,7 +165,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 <Suspense fallback={null}>
                     {modelUrl ? (
-                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 10.0} />
+                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 12.0} />
                     ) : (
                         <ProceduralAventusBottle />
                     )}
@@ -174,13 +173,13 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                     {/* High quality studio environment reflection */}
                     <Environment preset="studio" />
 
-                    {/* Realistic grounding shadow */}
-                    <ContactShadows resolution={512} position={[0, -1.2, 0]} opacity={listMode ? 0.3 : 0.6} scale={10} blur={2} far={4} color="#000000" />
+                    {/* Realistic grounding shadow positioned at the bottom of the scaled model */}
+                    <ContactShadows resolution={512} position={[0, -6, 0]} opacity={listMode ? 0.3 : 0.6} scale={15} blur={2.5} far={10} color="#000000" />
                 </Suspense>
 
                 {!listMode && (
                     <OrbitControls
-                        target={[0, 3.8, 0]}
+                        target={[0, 0, 0]}
                         enablePan={false}
                         enableZoom={true}
                         minZoom={0.5}
@@ -193,7 +192,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 )}
                 {listMode && (
                     <OrbitControls
-                        target={[0, 0.5, 0]}
+                        target={[0, 0, 0]}
                         enablePan={false}
                         enableZoom={false}
                         minPolarAngle={Math.PI / 2.5}
