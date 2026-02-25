@@ -44,6 +44,21 @@ export const products: Product[] = [
         baseNotes: "Sandalwood, Cedar, Amberwood, Tonka Bean, Iso E Super",
         modelUrl: "/models/BleudeChannel/bleu.glb",
         boxModelUrl: "/models/BleudeChannel/bleuBox.glb",
+    },
+    {
+        id: "3",
+        name: "Sauvage",
+        brand: "Dior",
+        description: "A radically fresh composition, dictated by a name that has the ring of a manifesto. Raw and noble all at once. Radiant top notes burst with the juicy freshness of Reggio di Calabria Bergamot. Ambroxan, derived from precious ambergris, unleashes a powerfully woody trail.",
+        price: 145,
+        sizes: [60, 100, 200],
+        category: "MEN",
+        scentFamily: "AROMATIC WOODY",
+        topNotes: "Calabrian Bergamot, Pepper",
+        middleNotes: "Sichuan Pepper, Lavender, Patchouli",
+        baseNotes: "Ambroxan, Cedar, Labdanum",
+        modelUrl: "/models/DiorSauvage/sauvage.glb",
+        boxModelUrl: "/models/DiorSauvage/sauvageBox.glb",
     }
 ];
 
