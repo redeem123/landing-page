@@ -136,7 +136,7 @@ function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: numb
 
             // Move it so its 3D center is at the scene origin, but aligned exactly with floor
             clonedScene.position.x -= scaledCenter.x
-            clonedScene.position.y -= scaledCenter.y - (scaledSize.y / 2) // Move center down exactly half its height so the bottom touches 0
+            clonedScene.position.y -= (scaledCenter.y - (scaledSize.y / 2)) + 1.2 // Move center down to -1.2 level
             clonedScene.position.z -= scaledCenter.z
         }
     }, [clonedScene])
@@ -166,7 +166,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 <Suspense fallback={null}>
                     {modelUrl ? (
-                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 22.0} />
+                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 10.0} />
                     ) : (
                         <ProceduralAventusBottle />
                     )}
@@ -180,7 +180,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
 
                 {!listMode && (
                     <OrbitControls
-                        target={[0, 1, 0]}
+                        target={[0, 3.8, 0]}
                         enablePan={false}
                         enableZoom={true}
                         minZoom={0.5}
