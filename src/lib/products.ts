@@ -57,7 +57,7 @@ export const products: Product[] = [
         topNotes: "Calabrian Bergamot, Pepper",
         middleNotes: "Sichuan Pepper, Lavender, Patchouli",
         baseNotes: "Ambroxan, Cedar, Labdanum",
-        modelUrl: "/models/DiorSauvage/sauvage.glb",
+        modelUrl: "/models/DiorSauvage/sauvage_perfume.glb",
         boxModelUrl: "/models/DiorSauvage/sauvageBox.glb",
     }
 ];
