@@ -110,6 +110,9 @@ function ProceduralAventusBottle() {
     )
 }
 
+// Set the Draco decoder path globally for the useGLTF hook
+useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.5/')
+
 // Loader for the actual external 3D model with instant correct scaling
 function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: number }) {
     const { scene } = useGLTF(url)
