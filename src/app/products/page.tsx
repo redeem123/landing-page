@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 import { products } from "@/lib/products"
+import { ProductViewer3D } from "@/components/ui/product-viewer-3d"
 
 export default async function ProductsPage({
     searchParams,
@@ -73,11 +74,10 @@ export default async function ProductsPage({
                             {filteredProducts.map((product) => (
                                 <Link href={`/products/${product.id}`} key={product.id}>
                                     <Card className="group cursor-pointer overflow-hidden border-none shadow-sm hover:shadow-md transition-all bg-white">
-                                        <div className="aspect-[4/5] w-full bg-[#f9f9f9] flex justify-center items-center p-8 relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity group-hover:opacity-100 z-10" />
-                                            <div className="h-full w-2/3 rounded-t-full rounded-b border border-[#dedede] bg-white shadow-xl flex flex-col items-center justify-center transition-transform duration-700 ease-out group-hover:scale-105">
-                                                <span className="font-serif text-[10px] uppercase tracking-widest text-black/50 mb-1">{product.brand}</span>
-                                                <span className="font-serif text-[12px] font-bold tracking-wider text-black/80">{product.name}</span>
+                                        <div className="aspect-[4/5] w-full bg-[#f9f9f9] flex justify-center items-center relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity group-hover:opacity-100 z-10 pointer-events-none" />
+                                            <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
+                                                <ProductViewer3D modelUrl={product.modelUrl} listMode={true} />
                                             </div>
                                         </div>
                                         <CardContent className="p-5 text-center">
