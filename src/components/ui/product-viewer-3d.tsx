@@ -148,18 +148,19 @@ function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: numb
 
 export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: string, listMode?: boolean }) {
     const [isVisible, setIsVisible] = React.useState(false)
+    const [isHovered, setIsHovered] = React.useState(false)
     const containerRef = React.useRef<HTMLDivElement>(null)
 
     React.useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true)
-                } else {
-                    if (listMode) setIsVisible(false)
+                // For main product pages (not listMode), load normally when visible
+                // For gallery/listMode, only set visibility if hovered + visible OR just use hover
+                if (!listMode) {
+                    if (entry.isIntersecting) setIsVisible(true)
                 }
             },
-            { rootMargin: '200px' }
+            { rootMargin: '400px' }
         )
 
         if (containerRef.current) {
@@ -173,10 +174,15 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
         }
     }, [listMode])
 
+    // In list mode, we only render the 3D canvas if it's actually hovered to save huge amounts of resources
+    const shouldRenderCanvas = !listMode ? isVisible : isHovered
+
     return (
         <div
             ref={containerRef}
             className={`w-full h-full ${listMode ? 'bg-[#f0eee9]' : 'bg-transparent'} rounded-sm relative overflow-hidden flex items-center justify-center`}
+            onMouseEnter={() => listMode && setIsHovered(true)}
+            onMouseLeave={() => listMode && setIsHovered(false)}
         >
             {!listMode && (
                 <div className="absolute top-6 left-6 z-10 bg-white/60 backdrop-blur-md text-[9px] uppercase tracking-[0.3em] px-4 py-2 font-bold text-primary border border-primary/5 rounded-none flex items-center gap-3 shadow-sm">
@@ -188,13 +194,16 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            {isVisible ? (
-                <Canvas shadows camera={{ position: [listMode ? 4 : 12, listMode ? 2 : 10, listMode ? 5 : 12], fov: listMode ? 45 : 40 }} className={listMode ? "pointer-events-none" : ""}>
+            {shouldRenderCanvas ? (
+                <Canvas
+                    shadows
+                    gl={{ powerPreference: "high-performance", antialias: false, alpha: true }}
+                    dpr={[1, 1.5]} // Limit pixel ratio for speed
+                    camera={{ position: [listMode ? 4 : 12, listMode ? 2 : 10, listMode ? 5 : 12], fov: listMode ? 45 : 40 }}
+                    className={listMode ? "pointer-events-none" : ""}
+                >
                     <ambientLight intensity={0.7} />
                     <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
-                    <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
-                    <directionalLight position={[0, 5, -5]} intensity={1} />
-
                     <Suspense fallback={null}>
                         {modelUrl ? (
                             <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 12.0} />
@@ -202,7 +211,7 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                             <ProceduralAventusBottle />
                         )}
                         <Environment preset="studio" />
-                        <ContactShadows resolution={512} position={[0, -6, 0]} opacity={listMode ? 0.3 : 0.6} scale={15} blur={2.5} far={10} color="#000000" />
+                        <ContactShadows resolution={256} position={[0, -6, 0]} opacity={listMode ? 0.3 : 0.6} scale={15} blur={2.5} far={10} color="#000000" />
                     </Suspense>
 
                     {!listMode && (
@@ -210,8 +219,6 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                             target={[0, 0, 0]}
                             enablePan={false}
                             enableZoom={true}
-                            minZoom={0.5}
-                            maxZoom={2}
                             minPolarAngle={Math.PI / 6}
                             maxPolarAngle={Math.PI / 2}
                             autoRotate
@@ -231,8 +238,22 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                     )}
                 </Canvas>
             ) : (
-                <div className="flex flex-col items-center justify-center opacity-20">
-                    <div className="h-24 w-12 rounded-t-full rounded-b-sm border-2 border-primary/20 bg-white" />
+                /* Premium Static Shadow Placeholder */
+                <div className="flex flex-col items-center justify-center animate-pulse-slow">
+                    <div className="h-28 w-14 rounded-t-full rounded-b-md border border-primary/10 bg-white/80 shadow-inner flex flex-col items-center justify-center">
+                        <div className="h-px w-6 bg-accent/20 mb-2" />
+                        <div className="h-px w-4 bg-accent/10" />
+                    </div>
+                    <div className="mt-6 h-1 w-16 bg-black/5 rounded-full blur-md" />
+                </div>
+            )}
+
+            {/* Instruction overlay for gallery view */}
+            {listMode && !isHovered && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/[0.02] transition-colors pointer-events-none">
+                    <span className="text-[8px] uppercase tracking-[0.4em] text-primary/30 font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                        Hover to Rotate
+                    </span>
                 </div>
             )}
         </div>
