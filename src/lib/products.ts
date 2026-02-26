@@ -285,6 +285,20 @@ export const products: Product[] = [
         middleNotes: "Oud, Spices, Lavender",
         baseNotes: "Patchouli, Amber, Cedarwood",
         modelUrl: "/models/Villain/villian_oud_hydra.glb",
+    },
+    {
+        id: "20",
+        name: "Le Male",
+        brand: "Jean Paul Gaultier",
+        description: "The classic fragrance that broke away from tradition. Le Male is as viral as it is iconic. A scent that's at once fresh and warm, strong and sensual, built on contrasts. It offers a reassuring trail with an extremely modern fragrance signature.",
+        price: 98,
+        sizes: [75, 125, 200],
+        category: "MEN",
+        scentFamily: "ORIENTAL FOUGERE",
+        topNotes: "Mint, Lavender, Bergamot",
+        middleNotes: "Cinnamon, Cumin, Orange Blossom",
+        baseNotes: "Vanilla, Tonka Bean, Sandalwood, Cedarwood",
+        modelUrl: "/models/JPGLeMale/le_male.glb",
     }
 ];
 
