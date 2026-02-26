@@ -147,9 +147,37 @@ function ModelLoader({ url, targetSize = 3.0 }: { url: string, targetSize?: numb
 }
 
 export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: string, listMode?: boolean }) {
+    const [isVisible, setIsVisible] = React.useState(false)
+    const containerRef = React.useRef<HTMLDivElement>(null)
+
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                } else {
+                    if (listMode) setIsVisible(false)
+                }
+            },
+            { rootMargin: '200px' }
+        )
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current)
+        }
+
+        return () => {
+            if (containerRef.current) {
+                observer.unobserve(containerRef.current)
+            }
+        }
+    }, [listMode])
+
     return (
-        <div className={`w-full h-full ${listMode ? 'bg-[#f0eee9]' : 'bg-transparent'} rounded-sm relative overflow-hidden flex items-center justify-center`}>
-            {/* Overlay badge - hide in list mode */}
+        <div
+            ref={containerRef}
+            className={`w-full h-full ${listMode ? 'bg-[#f0eee9]' : 'bg-transparent'} rounded-sm relative overflow-hidden flex items-center justify-center`}
+        >
             {!listMode && (
                 <div className="absolute top-6 left-6 z-10 bg-white/60 backdrop-blur-md text-[9px] uppercase tracking-[0.3em] px-4 py-2 font-bold text-primary border border-primary/5 rounded-none flex items-center gap-3 shadow-sm">
                     <span className="relative flex h-1.5 w-1.5">
@@ -160,51 +188,53 @@ export function ProductViewer3D({ modelUrl, listMode = false }: { modelUrl?: str
                 </div>
             )}
 
-            <Canvas shadows camera={{ position: [listMode ? 4 : 12, listMode ? 2 : 10, listMode ? 5 : 12], fov: listMode ? 45 : 40 }} className={listMode ? "pointer-events-none" : ""}>
-                <ambientLight intensity={0.7} />
-                <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
-                <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
-                <directionalLight position={[0, 5, -5]} intensity={1} />
+            {isVisible ? (
+                <Canvas shadows camera={{ position: [listMode ? 4 : 12, listMode ? 2 : 10, listMode ? 5 : 12], fov: listMode ? 45 : 40 }} className={listMode ? "pointer-events-none" : ""}>
+                    <ambientLight intensity={0.7} />
+                    <spotLight position={[5, 10, 5]} angle={0.2} penumbra={1} intensity={2} castShadow />
+                    <spotLight position={[-5, 5, 5]} angle={0.2} penumbra={1} intensity={1} color="#ffffff" />
+                    <directionalLight position={[0, 5, -5]} intensity={1} />
 
-                <Suspense fallback={null}>
-                    {modelUrl ? (
-                        <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 12.0} />
-                    ) : (
-                        <ProceduralAventusBottle />
+                    <Suspense fallback={null}>
+                        {modelUrl ? (
+                            <ModelLoader url={modelUrl} targetSize={listMode ? 3.0 : 12.0} />
+                        ) : (
+                            <ProceduralAventusBottle />
+                        )}
+                        <Environment preset="studio" />
+                        <ContactShadows resolution={512} position={[0, -6, 0]} opacity={listMode ? 0.3 : 0.6} scale={15} blur={2.5} far={10} color="#000000" />
+                    </Suspense>
+
+                    {!listMode && (
+                        <OrbitControls
+                            target={[0, 0, 0]}
+                            enablePan={false}
+                            enableZoom={true}
+                            minZoom={0.5}
+                            maxZoom={2}
+                            minPolarAngle={Math.PI / 6}
+                            maxPolarAngle={Math.PI / 2}
+                            autoRotate
+                            autoRotateSpeed={0.8}
+                        />
                     )}
-
-                    {/* High quality studio environment reflection */}
-                    <Environment preset="studio" />
-
-                    {/* Realistic grounding shadow positioned at the bottom of the scaled model */}
-                    <ContactShadows resolution={512} position={[0, -6, 0]} opacity={listMode ? 0.3 : 0.6} scale={15} blur={2.5} far={10} color="#000000" />
-                </Suspense>
-
-                {!listMode && (
-                    <OrbitControls
-                        target={[0, 0, 0]}
-                        enablePan={false}
-                        enableZoom={true}
-                        minZoom={0.5}
-                        maxZoom={2}
-                        minPolarAngle={Math.PI / 6}
-                        maxPolarAngle={Math.PI / 2}
-                        autoRotate
-                        autoRotateSpeed={0.8}
-                    />
-                )}
-                {listMode && (
-                    <OrbitControls
-                        target={[0, 0, 0]}
-                        enablePan={false}
-                        enableZoom={false}
-                        minPolarAngle={Math.PI / 2.5}
-                        maxPolarAngle={Math.PI / 2.5}
-                        autoRotate
-                        autoRotateSpeed={1.5}
-                    />
-                )}
-            </Canvas>
+                    {listMode && (
+                        <OrbitControls
+                            target={[0, 0, 0]}
+                            enablePan={false}
+                            enableZoom={false}
+                            minPolarAngle={Math.PI / 2.5}
+                            maxPolarAngle={Math.PI / 2.5}
+                            autoRotate
+                            autoRotateSpeed={1.5}
+                        />
+                    )}
+                </Canvas>
+            ) : (
+                <div className="flex flex-col items-center justify-center opacity-20">
+                    <div className="h-24 w-12 rounded-t-full rounded-b-sm border-2 border-primary/20 bg-white" />
+                </div>
+            )}
         </div>
     )
 }

@@ -108,7 +108,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 gap-y-20 gap-x-12 sm:grid-cols-2 lg:grid-cols-4">
-              {products.map((product) => (
+              {products.slice(0, 8).map((product) => (
                 <Link href={`/products/${product.id}`} key={product.id}>
                   <Card className="group cursor-pointer border-none shadow-none bg-transparent flex flex-col">
                     {/* Image Container with 3D Model */}
